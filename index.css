@@ -21,6 +21,9 @@ body {
   font-weight: 700;
   font-family: century gothic;
 }
+.timer-sub {
+  font-size: 0.5em;
+}
 #hide,
 #toggle,
 #reset,

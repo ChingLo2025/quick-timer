@@ -11,6 +11,16 @@ delay = 60000
 audio-remind = null
 audio-end = null
 
+pad = (v) ->
+  ("0#{v}")slice(-2)
+
+format-time = (ms) ->
+  remain = Math.max(0, Math.floor(ms))
+  cs = Math.floor(remain / 10) % 100
+  sec = Math.floor(remain / 1000) % 60
+  min = Math.floor(remain / 60000)
+  "#{pad(min)}.#{pad(sec)}.<span class=\"timer-sub\">#{pad(cs)}</span>"
+
 new-audio = (file) ->
   node = new Audio!
     ..src = file
@@ -34,7 +44,7 @@ adjust = (it,v) ->
   delay := delay + it * 1000
   if it==0 => delay := v * 1000
   if delay <= 0 => delay := 0
-  $ \#timer .text delay
+  $ \#timer .html format-time delay
   resize!
 
 toggle = ->
@@ -63,7 +73,7 @@ reset = ->
   toggle!
   if handler => clearInterval handler
   handler := null
-  $ \#timer .text delay
+  $ \#timer .html format-time delay
   $ \#timer .css \color, \#fff
   resize!
 
@@ -87,7 +97,7 @@ count = ->
     diff = 0
     clearInterval handler
     handler := setInterval ( -> blink!), 500
-  tm.text "#{diff}"
+  tm.html format-time diff
   resize!
 
 run =  ->
@@ -110,7 +120,7 @@ resize = ->
 
 
 window.onload = ->
-  $ \#timer .text delay
+  $ \#timer .html format-time delay
   resize!
   #audio-remind := new-audio \audio/cop-car.mp3
   #audio-end := new-audio \audio/fire-alarm.mp3
